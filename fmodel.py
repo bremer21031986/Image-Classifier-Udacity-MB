@@ -15,12 +15,15 @@ import json
 
 from collections import OrderedDict
 
-arch= {'vgg16': 25088}
+arch= {'vgg16': 25088,
+       'densenet121': 1024}
 
-def setup_network(structure='vgg16', dropout=0.5, hidden_layer=4096, lr=0.001, device='gpu'):
+def setup_network(structure='vgg16', dropout=0.5, hidden_units=4096, lr=0.001, device='gpu'):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if structure == 'vgg16':
         model = models.vgg16(pretrained=True)
+    elif structure == 'densenet121':
+        model = models.densenet121(pretrained=True)
         
     #defining an untrainged feed-forward network as classifiert
     for param in model.parameters():
@@ -50,10 +53,10 @@ def setup_network(structure='vgg16', dropout=0.5, hidden_layer=4096, lr=0.001, d
 
     return model, criterion
 
-def save_checkpoint(train_data, model=0, path='checkpoint_ICP2.pth', structure='vgg16', hidden_layer = 4096, dropout=0.5, lr=0.001, epochs = 3):
+def save_checkpoint(train_data, model=0, path='checkpoint.pth', structure='vgg16', hidden_units = 4096, dropout=0.5, lr=0.001, epochs = 3):
     model.class_to_idx =  train_data.class_to_idx
     torch.save({'structure' :structure,
-                'hidden_layer':hidden_layer,
+                'hidden_units':hidden_units,
                 'dropout':dropout,
                 'learning_rate':lr,
                 'epochs':epochs,
@@ -62,15 +65,15 @@ def save_checkpoint(train_data, model=0, path='checkpoint_ICP2.pth', structure='
                path)
     
 
-def load_checkpoint(path='checkpoint_ICP2'):
+def load_checkpoint(path='checkpoint'):
     checkpoint = torch.load(path)
     lr = checkpoint['learning_rate']
-    hiffen_layer = checkpoint['hidden_layer']
+    hiffen_units = checkpoint['hidden_units']
     dropout = checkpoint['dropout']
     epochs = checkpoint['epochs']
     structure = checkpoint['structure']
     
-    model,_ = setup_network(structure, dropout, hidden_layer, lr)
+    model,_ = setup_network(structure, dropout, hidden_units, lr)
     
     model.class_to_idx = checkpoint['class_to_idx']
     model.load_state_dict(checkpoint['state_dict'])
@@ -101,4 +104,3 @@ def process_image(image):
     image = img_transforms(img_pil)
     
     return image
-    
