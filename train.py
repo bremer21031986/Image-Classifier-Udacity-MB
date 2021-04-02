@@ -102,14 +102,15 @@ def main():
 #Saving Checkpoint
     model.class_to_idx = train_data.class_to_idx
 
-    checkpoint = {'epochs': epochs,
-                  'hidden_units': hidden_units,
-                  'dropout': dropout,
-                  'learning_rate': lr,
-                  'class_to_idx': model.class_to_idx,
-                  'classifier': model.classifier,
-                  'optimizer': optimizer.state_dict,
-                  'state_dict': model.state_dict()}
+    checkpoint = {'structure': structure,
+                 'epochs': epochs,
+                 'hidden_units': hidden_units,
+                 'dropout': dropout,
+                 'learning_rate': lr,
+                 'class_to_idx': model.class_to_idx,
+                 'classifier': model.classifier,
+                 'optimizer': optimizer.state_dict,
+                 'state_dict': model.state_dict()}
     torch.save(checkpoint, 'checkpoint.pth')
     print('Checkpoint Saved')
 
