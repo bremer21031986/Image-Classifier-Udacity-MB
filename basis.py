@@ -15,13 +15,14 @@ import json
 
 from collections import OrderedDict
 
-arch= {'vgg16': 25088}
+arch= {'vgg16': 25088,
+       'densenet121': 1024}
 
 def load_data(root = "./flowers"):
-    with open('cat_to_name.json', 'r') as f:
+    with open('cat_to_name.json') as f:
         cat_to_name = json.load(f)
         
-    data_dir = root
+    data_dir = './flowers'
     train_dir = data_dir + '/train'
     valid_dir = data_dir + '/valid'
     test_dir = data_dir + '/test'
